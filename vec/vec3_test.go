@@ -1,4 +1,4 @@
-package tracelib
+package vec
 
 import (
 	"testing"

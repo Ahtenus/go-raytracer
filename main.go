@@ -6,7 +6,7 @@ import (
 	// "io/ioutil"
 	"log"
 	"os"
-	"github.com/Ahtenus/go-raytracer/tracelib"
+	"github.com/Ahtenus/go-raytracer/vec"
 )
 
 func check(e error) {
@@ -29,21 +29,9 @@ func main() {
 	for j := imageHeight - 1; j >= 0; j-- {
 		log.Printf("Scanlines remaining: %d", j)
 		for i := 0; i < imageWidth; i++ {
-			r := float64(i) / float64(imageWidth)
-			g := float64(j) / float64(imageHeight)
-			b := 0.2
-
-
-			ir := int16(255.999 * r)
-			ig := int16(255.999 * g)
-			ib := int16(255.999 * b)
-
-			fmt.Fprintf(f, "%d %d %d\n", ir, ig, ib)
-			check(err)
+			color := vec.New3(float64(i) / float64(imageWidth), float64(j) / float64(imageHeight), 0.2)
+			color.WriteColor(f)
 		}
 	}
 	log.Printf("Done writing %s", filename)
-
-	test := tracelib.Vec3{V: [3]float64{10.0, 5.0, 3.0}}
-	log.Printf("%+v", test)
 }
