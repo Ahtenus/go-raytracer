@@ -1,6 +1,6 @@
 # Raytracer
 
-Raytracer based on (Raytracing in a Weekend)[https://raytracing.github.io/books/RayTracingInOneWeekend.html].
+Raytracer based on [Raytracing in a Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html).
 
 ## Usage
 
