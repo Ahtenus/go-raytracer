@@ -6,6 +6,7 @@ import (
 	// "io/ioutil"
 	"log"
 	"os"
+	"github.com/Ahtenus/go-raytracer/tracelib"
 )
 
 func check(e error) {
@@ -32,6 +33,7 @@ func main() {
 			g := float64(j) / float64(imageHeight)
 			b := 0.2
 
+
 			ir := int16(255.999 * r)
 			ig := int16(255.999 * g)
 			ib := int16(255.999 * b)
@@ -41,4 +43,7 @@ func main() {
 		}
 	}
 	log.Printf("Done writing %s", filename)
+
+	test := tracelib.Vec3{V: [3]float64{10.0, 5.0, 3.0}}
+	log.Printf("%+v", test)
 }
