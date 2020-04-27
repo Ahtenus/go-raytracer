@@ -14,29 +14,36 @@ func New3(v1 float64, v2 float64, v3 float64) Vec3 {
 	return Vec3{[3]float64{v1, v2, v3}}
 }
 
-func (a * Vec3) sub(b Vec3) {
+// Sub subtract and returns a new vector
+func (a Vec3) Sub(b Vec3) Vec3 {
 	a.V[0] -= b.V[0]
 	a.V[1] -= b.V[1]
 	a.V[2] -= b.V[2]
+	return a
 }
 
-func (a * Vec3) add(b Vec3) {
+// Add adds and returns a new vector
+func (a Vec3) Add(b Vec3) Vec3 {
 	a.V[0] += b.V[0]
 	a.V[1] += b.V[1]
 	a.V[2] += b.V[2]
+	return a
 }
 
-func (a * Vec3) mul(t float64) {
+// Mul multiplies and returns a new vector
+func (a Vec3) Mul(t float64) Vec3 {
 	a.V[0] *= t
 	a.V[1] *= t
 	a.V[2] *= t
+	return a
 }
 
-func (a * Vec3) div(t float64) {
-	a.mul(1/t)
+// Div divides and returns a new vector
+func (a Vec3) Div(t float64) Vec3 {
+	return a.Mul(1/t)
 }
 
-func (a * Vec3) lengthSquared() float64 {
+func (a Vec3) lengthSquared() float64 {
 	sum := 0.0
 	for _, v := range a.V {
 		sum += v * v
@@ -44,7 +51,8 @@ func (a * Vec3) lengthSquared() float64 {
 	return sum
 }
 
-func (a * Vec3) WriteColor(out io.Writer) {
+// WriteColor of vector to 
+func (a Vec3) WriteColor(out io.Writer) {
 	r := uint8(255.999 * a.V[0])
 	g := uint8(255.999 * a.V[1])
 	b := uint8(255.999 * a.V[2])

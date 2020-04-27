@@ -14,15 +14,19 @@ func TestVec3(t *testing.T) {
 	}
 	
 	a := Vec3{[3]float64{1.0, 2.0, 3.0}}
-	v.add(a)
-	v.sub(a)
+	b := v.Add(a)
+	c := b.Sub(a)
 	
 	if v != v2 {
 		t.Errorf("Not equal: %+v %+v", v, v2)
 	}
+		
+	if v != c {
+		t.Errorf("Not equal: %+v %+v", v, v2)
+	}
 
-	v.mul(3)
-	v.div(3)
+	v = v.Mul(3)
+	v = v.Div(3)
 
 	if v != v2 {
 		t.Errorf("Not equal: %+v %+v", v, v2)
