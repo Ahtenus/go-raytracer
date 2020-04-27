@@ -4,16 +4,10 @@ import (
 	// "bufio"
 	"fmt"
 	// "io/ioutil"
+	"github.com/Ahtenus/go-raytracer/vec"
 	"log"
 	"os"
-	"github.com/Ahtenus/go-raytracer/vec"
 )
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 func main() {
 	filename := "out/hello_world.ppm"
@@ -24,14 +18,44 @@ func main() {
 	imageWidth := 200
 	imageHeight := 100
 
+	lowerLeft := vec.New3(-2.0, -1.0, -1.0)
+	horizontal := vec.New3(4.0, 0.0, 0.0)
+	vertical := vec.New3(0.0, 2.0, 0.0)
+	origin := vec.New3(0.0, 0.0, 0.0)
+
 	fmt.Fprintf(f, "P3\n%d\n%d\n255\n", imageWidth, imageHeight)
 
 	for j := imageHeight - 1; j >= 0; j-- {
 		log.Printf("Scanlines remaining: %d", j)
 		for i := 0; i < imageWidth; i++ {
-			color := vec.New3(float64(i) / float64(imageWidth), float64(j) / float64(imageHeight), 0.2)
-			color.WriteColor(f)
+			u := float64(i) / float64(imageWidth)
+			v := float64(j) / float64(imageHeight)
+			ray := vec.Ray{Orig: origin, Dir: lowerLeft.Add(horizontal.Mul(u)).Add(vertical.Mul(v))}
+			colorRay(ray).WriteColor(f)
 		}
 	}
 	log.Printf("Done writing %s", filename)
+}
+
+func colorRay(r vec.Ray) vec.Vec3 {
+	if hitSphere(vec.New3(0.0, 0.0, 1.0), 0.5, r) {
+		return vec.New3(1.0, 0.0, 0.0)
+	}
+	unitDirection := r.Dir.Unit()
+	t := 0.5*unitDirection.Y() + 1.0
+	return vec.New3(1.0, 1.0, 1.0).Mul(1.0 - t).Add(vec.New3(0.5, 0.7, 1.0).Mul(t))
+}
+
+func hitSphere(center vec.Vec3, radius float64, ray vec.Ray) bool {
+	oc := ray.Orig.Sub(center)
+	a := ray.Dir.Dot(ray.Dir)
+	b := 2.0 * oc.Dot(ray.Dir)
+	c := oc.Dot(oc) - radius*radius
+	discriminant := b*b - 4*a*c
+	return discriminant > 0
+}
+func check(e error) {
+	if e != nil {
+		panic(e)
+	}
 }
