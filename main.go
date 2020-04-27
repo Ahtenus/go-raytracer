@@ -18,10 +18,10 @@ func main() {
 	imageWidth := 200
 	imageHeight := 100
 
-	lowerLeft := vec.Vec3{-2.0, -1.0, -1.0}
-	horizontal := vec.Vec3{4.0, 0.0, 0.0}
-	vertical := vec.Vec3{0.0, 2.0, 0.0}
-	origin := vec.Vec3{0.0, 0.0, 0.0}
+	lowerLeft := vec.Vec(-2.0, -1.0, -1.0)
+	horizontal := vec.Vec(4.0, 0.0, 0.0)
+	vertical := vec.Vec(0.0, 2.0, 0.0)
+	origin := vec.Vec(0.0, 0.0, 0.0)
 
 	fmt.Fprintf(f, "P3\n%d\n%d\n255\n", imageWidth, imageHeight)
 
@@ -38,12 +38,12 @@ func main() {
 }
 
 func colorRay(r vec.Ray) vec.Vec3 {
-	if hitSphere(vec.Vec3{0.0, 0.0, 1.0}, 0.5, r) {
-		return vec.Vec3{1.0, 0.0, 0.0}
+	if hitSphere(vec.Vec(0.0, 0.0, 1.0), 0.5, r) {
+		return vec.Vec(1.0, 0.0, 0.0)
 	}
 	unitDirection := r.Dir.Unit()
 	t := 0.5*unitDirection.Y + 1.0
-	return vec.Vec3{1.0, 1.0, 1.0}.Mul(1.0 - t).Add(vec.Vec3{0.5, 0.7, 1.0}.Mul(t))
+	return vec.Vec(1.0, 1.0, 1.0).Mul(1.0 - t).Add(vec.Vec(0.5, 0.7, 1.0).Mul(t))
 }
 
 func hitSphere(center vec.Vec3, radius float64, ray vec.Ray) bool {

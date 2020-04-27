@@ -10,6 +10,10 @@ type Vec3 struct {
 	X, Y, Z float64
 }
 
+// Vec Create new Vec3
+func Vec(x float64, y float64, z float64) Vec3 {
+	return Vec3{X: x, Y: y, Z: z}
+}
 // Sub subtract and returns a new vector
 func (a Vec3) Sub(b Vec3) Vec3 {
 	a.X -= b.X
