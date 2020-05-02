@@ -1,11 +1,10 @@
 package main
 
 import (
-	// "bufio"
 	"fmt"
-	// "io/ioutil"
 	"github.com/Ahtenus/go-raytracer/vec"
 	"log"
+	"math"
 	"os"
 )
 
@@ -38,22 +37,28 @@ func main() {
 }
 
 func colorRay(r vec.Ray) vec.Vec3 {
-	if hitSphere(vec.Vec(0.0, 0.0, 1.0), 0.5, r) {
-		return vec.Vec(1.0, 0.0, 0.0)
+	t := hitSphere(vec.Vec(0, 0, -1), 0.5, r)
+	if t > 0.0 {
+		normal := r.At(t).Sub(vec.Vec(0, 0, -1)).Unit()
+		return vec.Vec(normal.X+1, normal.Y+1, normal.Z+1).Mul(0.5)
 	}
 	unitDirection := r.Dir.Unit()
-	t := 0.5*unitDirection.Y + 1.0
+	t = 0.5*unitDirection.Y + 1.0
 	return vec.Vec(1.0, 1.0, 1.0).Mul(1.0 - t).Add(vec.Vec(0.5, 0.7, 1.0).Mul(t))
 }
 
-func hitSphere(center vec.Vec3, radius float64, ray vec.Ray) bool {
+func hitSphere(center vec.Vec3, radius float64, ray vec.Ray) float64 {
 	oc := ray.Orig.Sub(center)
 	a := ray.Dir.Dot(ray.Dir)
 	b := 2.0 * oc.Dot(ray.Dir)
 	c := oc.Dot(oc) - radius*radius
 	discriminant := b*b - 4*a*c
-	return discriminant > 0
+	if discriminant < 0 {
+		return -1.0
+	}
+	return (-b - math.Sqrt(discriminant)) / (2.0 * a)
 }
+
 func check(e error) {
 	if e != nil {
 		panic(e)
