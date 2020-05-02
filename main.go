@@ -34,7 +34,7 @@ func main() {
 			u := float64(i) / float64(imageWidth)
 			v := float64(j) / float64(imageHeight)
 			ray := vec.Ray{Orig: origin, Dir: lowerLeft.Add(horizontal.Mul(u)).Add(vertical.Mul(v))}
-			rayColor(world, ray).WriteColor(f)
+			rayColorIfHit(world, ray).WriteColor(f)
 		}
 	}
 	log.Printf("Done writing %s", filename + ".ppm")
