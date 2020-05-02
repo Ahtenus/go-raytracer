@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"math"
 )
 
 func main() {
@@ -43,9 +44,9 @@ func main() {
 }
 
 func hit(world []vec.Hittable, ray vec.Ray, tMin float64, tMax float64) (isHit bool, t float64, pos vec.Vec3, normal vec.Vec3, frontFace bool) {
-	tCur := tMax
+	t = tMax
 	for _, hittable := range world {
-		isHitCur, tCur, posCur, normalCur, frontFaceCur := hittable.Hit(ray, tMin, tCur)
+		isHitCur, tCur, posCur, normalCur, frontFaceCur := hittable.Hit(ray, tMin, t)
 		if isHitCur {
 			isHit = isHitCur
 			t = tCur
@@ -60,19 +61,13 @@ func hit(world []vec.Hittable, ray vec.Ray, tMin float64, tMax float64) (isHit b
 func rayColor(world []vec.Hittable, r vec.Ray) vec.Vec3 {
 	isHit, t, _, normal, _ := hit(world, r, 0, 1E6)
 	if isHit {
-		return (vec.Vec(1,1,1).Add(normal)).Mul(0.5)
+		if(math.Abs(normal.Length() - 1.0) > 1E-6) {
+			log.Printf("Normal of length %f", normal.Length())
+		}
+		return (vec.Vec(1,1,1).Add(normal)).Div(2)
 	}
-	unitDirection := r.Dir.Unit()
-	t = 0.5*unitDirection.Y + 1.0
+	t = 0.5*r.Dir.Unit().Y + 1.0
 	return vec.Vec(1.0, 1.0, 1.0).Mul(1.0 - t).Add(vec.Vec(0.5, 0.7, 1.0).Mul(t))
-}
-
-func rayColorIfHit(world []vec.Hittable, r vec.Ray) vec.Vec3 {
-	isHit, _, _, _, _ := hit(world, r, 0, 1E6)
-	if isHit {
-		return vec.Vec(0.5,0.5,0.5)
-	}
-	return vec.Vec(0,0,0)
 }
 
 func convertToPng(filename string) {

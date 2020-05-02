@@ -1,6 +1,8 @@
 package vec
 
-import "math"
+import (
+	"math"
+)
 
 // Sphere a sphere
 type Sphere struct {
