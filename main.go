@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"math"
+	"io"
 )
 
 func main() {
@@ -18,14 +19,22 @@ func main() {
 	imageWidth := 200
 	imageHeight := 100
 
+	s1 := vec.NewSphere(vec.Vec(0, 0, -1), 0.5)
+	s2 := vec.NewSphere(vec.Vec(0, -100.5, -1), 100)
+	world := []vec.Hittable{&s1, &s2}
+
+	drawScene(imageWidth, imageHeight, world, f)
+	
+	log.Printf("Done writing %s", filename + ".ppm")
+	convertToPng(filename)
+	log.Printf("Done writing %s", filename + ".png")
+}
+
+func drawScene(imageWidth int, imageHeight int, world []vec.Hittable, f io.Writer) {
 	lowerLeft := vec.Vec(-2.0, -1.0, -1.0)
 	horizontal := vec.Vec(4.0, 0.0, 0.0)
 	vertical := vec.Vec(0.0, 2.0, 0.0)
 	origin := vec.Vec(0.0, 0.0, 0.0)
-
-	s1 := vec.NewSphere(vec.Vec(0, 0, -1), 0.5)
-	s2 := vec.NewSphere(vec.Vec(0, -100.5, -1), 100)
-	world := []vec.Hittable{&s1, &s2}
 
 	fmt.Fprintf(f, "P3\n%d\n%d\n255\n", imageWidth, imageHeight)
 
@@ -38,9 +47,6 @@ func main() {
 			rayColor(world, ray).WriteColor(f)
 		}
 	}
-	log.Printf("Done writing %s", filename + ".ppm")
-	convertToPng(filename)
-	log.Printf("Done writing %s", filename + ".png")
 }
 
 func hit(world []vec.Hittable, ray vec.Ray, tMin float64, tMax float64) (isHit bool, t float64, pos vec.Vec3, normal vec.Vec3, frontFace bool) {
