@@ -34,7 +34,7 @@ func main() {
 			u := float64(i) / float64(imageWidth)
 			v := float64(j) / float64(imageHeight)
 			ray := vec.Ray{Orig: origin, Dir: lowerLeft.Add(horizontal.Mul(u)).Add(vertical.Mul(v))}
-			rayColorIfHit(world, ray).WriteColor(f)
+			rayColor(world, ray).WriteColor(f)
 		}
 	}
 	log.Printf("Done writing %s", filename + ".ppm")
@@ -43,11 +43,15 @@ func main() {
 }
 
 func hit(world []vec.Hittable, ray vec.Ray, tMin float64, tMax float64) (isHit bool, t float64, pos vec.Vec3, normal vec.Vec3, frontFace bool) {
-	isHit = false
+	tCur := tMax
 	for _, hittable := range world {
-		isHit, t, pos, normal, frontFace = hittable.Hit(ray, tMin, tMax)
-		if isHit {
-			tMax = t
+		isHitCur, tCur, posCur, normalCur, frontFaceCur := hittable.Hit(ray, tMin, tCur)
+		if isHitCur {
+			isHit = isHitCur
+			t = tCur
+			pos = posCur
+			normal = normalCur
+			frontFace = frontFaceCur
 		}
 	}
 	return
@@ -66,7 +70,7 @@ func rayColor(world []vec.Hittable, r vec.Ray) vec.Vec3 {
 func rayColorIfHit(world []vec.Hittable, r vec.Ray) vec.Vec3 {
 	isHit, _, _, _, _ := hit(world, r, 0, 1E6)
 	if isHit {
-		return vec.Vec(1,1,1)
+		return vec.Vec(0.5,0.5,0.5)
 	}
 	return vec.Vec(0,0,0)
 }
