@@ -23,8 +23,8 @@ func main() {
 	origin := vec.Vec(0.0, 0.0, 0.0)
 
 	s1 := vec.NewSphere(vec.Vec(0, 0, -1), 0.5)
-	// s2 := vec.NewSphere(vec.Vec(0, -100.5, -1), 100)
-	world := []vec.Hittable{&s1}
+	s2 := vec.NewSphere(vec.Vec(0, -100.5, -1), 100)
+	world := []vec.Hittable{&s1, &s2}
 
 	fmt.Fprintf(f, "P3\n%d\n%d\n255\n", imageWidth, imageHeight)
 
@@ -55,12 +55,20 @@ func hit(world []vec.Hittable, ray vec.Ray, tMin float64, tMax float64) (isHit b
 
 func rayColor(world []vec.Hittable, r vec.Ray) vec.Vec3 {
 	isHit, t, _, normal, _ := hit(world, r, 0, 1E6)
-	if isHit { // 
+	if isHit {
 		return (vec.Vec(1,1,1).Add(normal)).Mul(0.5)
 	}
 	unitDirection := r.Dir.Unit()
 	t = 0.5*unitDirection.Y + 1.0
 	return vec.Vec(1.0, 1.0, 1.0).Mul(1.0 - t).Add(vec.Vec(0.5, 0.7, 1.0).Mul(t))
+}
+
+func rayColorIfHit(world []vec.Hittable, r vec.Ray) vec.Vec3 {
+	isHit, _, _, _, _ := hit(world, r, 0, 1E6)
+	if isHit {
+		return vec.Vec(1,1,1)
+	}
+	return vec.Vec(0,0,0)
 }
 
 func convertToPng(filename string) {
@@ -70,8 +78,7 @@ func convertToPng(filename string) {
         log.Println(err.Error())
         return
     }
-
-    fmt.Print(string(stdout))
+    log.Print(string(stdout))
 }
 
 func check(e error) {

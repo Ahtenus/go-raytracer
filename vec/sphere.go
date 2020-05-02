@@ -25,7 +25,7 @@ func (s *Sphere) Hit(ray Ray, tMin float64, tMax float64) (isHit bool, t float64
 		isHit = t < tMax && t > tMin
 		if isHit {
 			pos = ray.At(t)
-			normal = pos.Sub(s.Center).Div(s.Radius)
+			normal = (pos.Sub(s.Center)).Div(s.Radius)
 			frontFace = ray.Dir.Dot(normal) < 0
 			if !frontFace {
 				// Point normal toward ray
@@ -39,5 +39,5 @@ func (s *Sphere) Hit(ray Ray, tMin float64, tMax float64) (isHit bool, t float64
 
 // NewSphere with center and radius
 func NewSphere(center Vec3, radius float64) Sphere {
-	return Sphere{Center: center, Radius: 100}
+	return Sphere{Center: center, Radius: radius}
 }
