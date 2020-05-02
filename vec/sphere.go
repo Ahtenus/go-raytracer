@@ -23,7 +23,7 @@ func (s *Sphere) Hit(ray Ray, tMin float64, tMax float64) (isHit bool, t float64
 
 	root := math.Sqrt(discriminant)
 	for _, m := range []float64{-1, 1} {
-		t = (-halfB - m*root) / a
+		t = (-halfB + m*root) / a
 		isHit = t < tMax && t > tMin
 		if isHit {
 			pos = ray.At(t)
